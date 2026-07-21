@@ -87,7 +87,7 @@ const ExpensePage = () => {
         type: "expense",
         category: "Food",
     });
-    const [setOverview] = useState({
+    const [overview, setOverview] = useState({
         totalExpense: 0,
         averageExpense: 0,
         numberOfTransactions: 0,
@@ -97,10 +97,9 @@ const ExpensePage = () => {
 
     // Auth headers helper
     const getAuthHeaders = useCallback(() => {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token") || sessionStorage.getItem("token");
         return token ? { Authorization: `Bearer ${token}` } : {};
     }, []);
-
     // Fetch overview (GET /expense/overview?range=...)
     const fetchOverview = useCallback(async (range = timeFrame ?? "monthly") => {
         try {

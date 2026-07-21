@@ -41,7 +41,7 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip, Legend } from "recha
 const API_URL = `${import.meta.env.VITE_API_URL || "http://localhost:4000"}/api`;
 
 const getAuthHeader = () => {
-    const token = localStorage.getItem("token") || localStorage.getItem("authToken");
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token") || localStorage.getItem("authToken");
     return token ? { Authorization: `Bearer ${token}` } : {};
 };
 

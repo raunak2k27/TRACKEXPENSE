@@ -26,6 +26,11 @@ const CATEGORY_ICONS = {
     Savings: <PiggyBank className="w-4 h-4" />,
 };
 
+const getAuthHeaders = () => {
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 // To filter
 const filterTransactions = (transactions, frame) => {
     const now = new Date();
@@ -72,8 +77,7 @@ const Layout = ({ onLogout, user }) => {
     const fetchTransactions = async () => {
         try {
             setLoading(true);
-            const token = localStorage.getItem("token");
-            const headers = token ? { Authorization: `Bearer ${token}` } : {};
+            const headers = getAuthHeaders();
 
             const [incomeRes, expenseRes] = await Promise.all([
                 axios.get(`${API_BASE}/income/get`, { headers }),
@@ -115,8 +119,7 @@ const Layout = ({ onLogout, user }) => {
 
     const addTransaction = async (transaction) => {
         try {
-            const token = localStorage.getItem("token");
-            const headers = token ? { Authorization: `Bearer ${token}` } : {};
+            const headers = getAuthHeaders();
             const endpoint =
                 transaction.type === "income" ? "income/add" : "expense/add";
             await axios.post(`${API_BASE}/${endpoint}`, transaction, { headers });
@@ -133,8 +136,7 @@ const Layout = ({ onLogout, user }) => {
 
     const editTransaction = async (id, transaction) => {
         try {
-            const token = localStorage.getItem("token");
-            const headers = token ? { Authorization: `Bearer ${token}` } : {};
+            const headers = getAuthHeaders();
             const endpoint =
                 transaction.type === "income" ? "income/update" : "expense/update";
             await axios.put(`${API_BASE}/${endpoint}/${id}`, transaction, {
@@ -153,8 +155,7 @@ const Layout = ({ onLogout, user }) => {
 
     const deleteTransaction = async (id, type) => {
         try {
-            const token = localStorage.getItem("token");
-            const headers = token ? { Authorization: `Bearer ${token}` } : {};
+            const headers = getAuthHeaders();
             const endpoint = type === "income" ? "income/delete" : "expense/delete";
             await axios.delete(`${API_BASE}/${endpoint}/${id}`, { headers });
             await fetchTransactions();
