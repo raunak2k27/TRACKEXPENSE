@@ -38,7 +38,7 @@ import GaugeCard from "../assets/componants/GaugeCard";
 import AddTransactionModal from "../assets/componants/Add";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip, Legend } from "recharts";
 
-const API_URL = "http://localhost:4000/api";
+const API_URL = `${import.meta.env.VITE_API_URL || "http://localhost:4000"}/api`;
 
 const getAuthHeader = () => {
     const token = localStorage.getItem("token") || localStorage.getItem("authToken");
@@ -478,8 +478,8 @@ const Dashboard = () => {
                             {typeof overviewMeta.savingsRate === "number" && (
                                 <span
                                     className={`px-2 py-1 rounded-full text-xs font-medium ${overviewMeta.savingsRate < 0
-                                            ? trendStyles.negativeRate
-                                            : trendStyles.positiveRate
+                                        ? trendStyles.negativeRate
+                                        : trendStyles.positiveRate
                                         }`}
                                 >
                                     {overviewMeta.savingsRate}%
