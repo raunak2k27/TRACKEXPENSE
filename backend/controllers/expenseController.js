@@ -24,7 +24,7 @@ export async function addExpense(req, res) {
         await newExpense.save();
         res.json({
             success: true,
-            message: "Expense added successfully!"  // ✅ typo fix: messsage → message
+            message: "Expense added successfully!"
         });
     }
     catch (error) {
@@ -40,8 +40,8 @@ export async function addExpense(req, res) {
 export async function getAllExpense(req, res) {
     const userId = req.user._id;
     try {
-        const expense = await expenseModel.find({ userId }).sort({ date: -1 }); // ✅ fixed
-        res.json(expense); // ✅ fixed
+        const expense = await expenseModel.find({ userId }).sort({ date: -1 });
+        res.json(expense);
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -66,7 +66,7 @@ export async function updateExpense(req, res) {
         );
 
         if (!updatedExpense) {
-            return res.status(404).json({ // ✅ req → res
+            return res.status(404).json({
                 success: false,
                 message: "Expense not found"
             });
@@ -91,7 +91,7 @@ export async function updateExpense(req, res) {
 // to delete an expense
 export async function deleteExpense(req, res) {
     try {
-        const expense = await expenseModel.findByIdAndDelete(req.params.id); // ✅ simplified
+        const expense = await expenseModel.findByIdAndDelete(req.params.id);
         if (!expense) {
             return res.status(404).json({
                 success: false,
@@ -117,12 +117,12 @@ export async function deleteExpense(req, res) {
 export async function downloadExpenseExcel(req, res) {
     const userId = req.user._id;
     try {
-        const expense = await expenseModel.find({ userId }).sort({ date: -1 }); // ✅ data → date
-        const plainData = Expense.map((exp) => ({
+        const expense = await expenseModel.find({ userId }).sort({ date: -1 });
+        const plainData = expense.map((exp) => ({
             Description: exp.description,
             Category: exp.category,
             Amount: exp.amount,
-            Date: new Date(exp.date).toLocaleDateString(), // ✅ Data→Date, data→date, toLocaleDataString→toLocaleDateString
+            Date: new Date(exp.date).toLocaleDateString(),
         }));
 
         const workSheet = XLSX.utils.json_to_sheet(plainData);
@@ -145,18 +145,18 @@ export async function getexpenseOverview(req, res) {
     try {
         const userId = req.user._id;
         const { range = "monthly" } = req.query;
-        const { start, end } = getDataRange(range);
+        const { start, end } = getDateRange(range);
 
         const expense = await expenseModel.find({
             userId,
-            date: { $gte: start, $lte: end }, // ✅ $get → $gte
+            date: { $gte: start, $lte: end },
         }).sort({ date: -1 });
 
         const totalExpense = expense.reduce((acc, cur) => acc + cur.amount, 0);
         const averageExpense =
             expense.length > 0 ? totalExpense / expense.length : 0;
         const numberOfTransactions = expense.length;
-        const recentTransaction = expense.slice(0, 5);
+        const recentTransactions = expense.slice(0, 5);
 
         res.json({
             success: true,
